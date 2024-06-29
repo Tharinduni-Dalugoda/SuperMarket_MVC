@@ -4,12 +4,14 @@
  */
 package ijse.supermarket.mvc.main;
 
+import ijse.supermarket.mvc.view.CustomerView;
+
 /**
  *
  * @author user
  */
 public class Main {
     public static void main(String[]args){
-        System.out.println("hellov");
+        new CustomerView().setVisible(true);
     }
 }

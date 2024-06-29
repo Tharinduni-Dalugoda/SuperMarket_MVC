@@ -93,6 +93,11 @@ public class CustomerDto {
     public void setTelNo(int TelNo) {
         this.TelNo = TelNo;
     }
+
+    @Override
+    public String toString() {
+        return "CustomerDto{" + "CustID=" + CustID + ", CustName=" + CustName + ", DOB=" + DOB + ", Address=" + Address + ", Salary=" + Salary + ", TelNo=" + TelNo + '}';
+    }
     
     
 }
