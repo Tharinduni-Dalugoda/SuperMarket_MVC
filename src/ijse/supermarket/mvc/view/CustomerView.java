@@ -4,16 +4,23 @@
  */
 package ijse.supermarket.mvc.view;
 
+import ijse.supermarket.mvc.controller.CustomerController;
+import ijse.supermarket.mvc.dto.CustomerDto;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author user
  */
 public class CustomerView extends javax.swing.JFrame {
-
+    private CustomerController customerController;
     /**
      * Creates new form CustomerView
      */
     public CustomerView() {
+        this.customerController = new CustomerController();
         initComponents();
     }
 
@@ -53,16 +60,16 @@ public class CustomerView extends javax.swing.JFrame {
 
         txtid.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-        nameLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        nameLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         nameLabel.setText("Cust Name");
 
-        dobLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        dobLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         dobLabel.setText("DOB");
 
-        addressLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        addressLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         addressLabel.setText("Address");
 
-        salaryLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        salaryLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         salaryLabel.setText("Salary");
 
         txtname.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -75,13 +82,18 @@ public class CustomerView extends javax.swing.JFrame {
 
         txttel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-        telLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        telLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         telLabel.setText("Tel No:");
 
         btnSave.setBackground(new java.awt.Color(51, 102, 255));
         btnSave.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnSave.setForeground(new java.awt.Color(255, 255, 255));
         btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -158,11 +170,15 @@ public class CustomerView extends javax.swing.JFrame {
                     .addComponent(txttel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(telLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(102, Short.MAX_VALUE))
+                .addContainerGap(104, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        saveCustomer();
+    }//GEN-LAST:event_btnSaveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -187,4 +203,25 @@ public class CustomerView extends javax.swing.JFrame {
     private javax.swing.JTextField txtsalary;
     private javax.swing.JTextField txttel;
     // End of variables declaration//GEN-END:variables
+
+  private void saveCustomer(){
+      CustomerDto dto = new CustomerDto();
+      dto.setCustID(txtid.getText());
+      dto.setCustName(txtname.getText());
+      dto.setDOB(txtdob.getText());
+      dto.setAddress(txtaddress.getText());
+      dto.setSalary(Integer.parseInt(txtsalary.getText()));
+      dto.setTelNo(Integer.parseInt(txttel.getText()));
+      
+        try {
+            String result = customerController.saveCustomer(dto);
+            System.out.println(result);
+        } catch (ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerView.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+  }
+    
+
 }
