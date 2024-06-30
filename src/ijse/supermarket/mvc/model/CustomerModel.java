@@ -65,4 +65,25 @@ public class CustomerModel {
         return customerDtos;
         
     }
+    
+    public CustomerDto searchCustomer(String id) throws ClassNotFoundException, SQLException{
+        Connection connection = DBconnection.getinstance().getConnection();
+        
+        String sql = "SELECT*FROM Customer WHERE CustID = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, id);
+        
+        ResultSet rst = statement.executeQuery();
+        CustomerDto dto = null;
+        while(rst.next()){
+            dto = new CustomerDto ();
+            dto.setCustID(rst.getString("CustID"));
+            dto.setCustName(rst.getString("CustName"));
+            dto.setDOB(rst.getString("DOB"));
+            dto.setAddress(rst.getString("Address"));
+            dto.setSalary(rst.getInt("Salary"));
+                
+        }
+        return dto;
+    }
 }

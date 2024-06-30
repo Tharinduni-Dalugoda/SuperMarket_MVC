@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -17,7 +18,9 @@ import javax.swing.table.DefaultTableModel;
  * @author user
  */
 public class CustomerView extends javax.swing.JFrame {
+
     private CustomerController customerController;
+
     /**
      * Creates new form CustomerView
      */
@@ -126,6 +129,11 @@ public class CustomerView extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblcust.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblcustMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblcust);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -210,11 +218,13 @@ public class CustomerView extends javax.swing.JFrame {
         saveCustomer();
     }//GEN-LAST:event_btnSaveActionPerformed
 
+    private void tblcustMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblcustMouseClicked
+        searchCustomer();
+    }//GEN-LAST:event_tblcustMouseClicked
+
     /**
      * @param args the command line arguments
      */
-    
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel addressLabel;
@@ -238,54 +248,86 @@ public class CustomerView extends javax.swing.JFrame {
     private javax.swing.JTextField txttel;
     // End of variables declaration//GEN-END:variables
 
-  private void saveCustomer(){
-      CustomerDto dto = new CustomerDto();
-      dto.setCustID(txtid.getText());
-      dto.setCustName(txtname.getText());
-      dto.setDOB(txtdob.getText());
-      dto.setAddress(txtaddress.getText());
-      dto.setSalary(Integer.parseInt(txtsalary.getText()));
-      dto.setTelNo(Integer.parseInt(txttel.getText()));
-      
+    private void saveCustomer() {
+        CustomerDto dto = new CustomerDto();
+        dto.setCustID(txtid.getText());
+        dto.setCustName(txtname.getText());
+        dto.setDOB(txtdob.getText());
+        dto.setAddress(txtaddress.getText());
+        dto.setSalary(Integer.parseInt(txtsalary.getText()));
+        dto.setTelNo(Integer.parseInt(txttel.getText()));
+
         try {
             String result = customerController.saveCustomer(dto);
             System.out.println(result);
+            JOptionPane.showMessageDialog(this, result);
+            loadCustomers();
+            clear();
         } catch (ClassNotFoundException ex) {
             System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(this, ex.getMessage());
         } catch (SQLException ex) {
             Logger.getLogger(CustomerView.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-  }
-  
-  public Void loadCustomers(){
-    try {  
-      String columns[]= {"ID", "Name", "Dob", "Address","Salary"};
-      DefaultTableModel dtm = new DefaultTableModel(columns,0){
-          @Override
-          public boolean isCellEditable(int row, int column) {
-              return false;          
-          }
-        
-      };    
-          tblcust.setModel(dtm);
-        
-        
-     
-      
-            ArrayList<CustomerDto> customerDtos = customerController.getAllCustomer();
-            
-             for(CustomerDto customerDto : customerDtos){
-            Object[] rowData = {customerDto.getCustID(),customerDto.getCustName(),customerDto.getDOB(),customerDto.getAddress(),customerDto.getSalary()};
-            dtm.addRow(rowData);
         }
-            
-            
+    }
+
+    public void clear() {
+        txtid.setText("");
+        txtname.setText("");
+        txtdob.setText("");
+        txtaddress.setText("");
+        txtsalary.setText("");
+        txttel.setText("");
+
+    }
+
+    public Void loadCustomers() {
+        try {
+            String columns[] = {"ID", "Name", "Dob", "Address", "Salary"};
+            DefaultTableModel dtm = new DefaultTableModel(columns, 0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+
+            };
+            tblcust.setModel(dtm);
+
+            ArrayList<CustomerDto> customerDtos = customerController.getAllCustomer();
+
+            for (CustomerDto customerDto : customerDtos) {
+                Object[] rowData = {customerDto.getCustID(), customerDto.getCustName(), customerDto.getDOB(), customerDto.getAddress(), customerDto.getSalary()};
+                dtm.addRow(rowData);
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(CustomerView.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+        return null;
+
+    }
+
+    public void searchCustomer() {
+        String id = tblcust.getValueAt(tblcust.getSelectedRow(), 0).toString();
+        try {
+            CustomerDto dto = customerController.searchCustomer(id);
+            if (dto != null) {
+                txtid.setText(dto.getCustID());
+                txtname.setText(dto.getCustName());
+                txtdob.setText(dto.getDOB());
+                txtaddress.setText(dto.getAddress());
+                txtsalary.setText(Integer.toString(dto.getSalary()));
+                txttel.setText(Integer.toString(dto.getTelNo()));
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Customer Not Found");
+            }
+
         } catch (Exception ex) {
             Logger.getLogger(CustomerView.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
-        
-       
-}
+
+    }
 
 }
