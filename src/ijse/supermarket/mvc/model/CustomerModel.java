@@ -8,8 +8,11 @@ package ijse.supermarket.mvc.model;
 import java.sql.Connection;
 import ijse.supermarket.mvc.db.DBconnection;
 import ijse.supermarket.mvc.dto.CustomerDto;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
 
 /**
@@ -36,8 +39,30 @@ public class CustomerModel {
         }else{
             return "fail";
         }
-        
-                
-        }
+                 
+    };
     
+    public ArrayList<CustomerDto> getAllCustomer() throws SQLException, ClassNotFoundException{
+        
+        Connection connection = DBconnection.getinstance().getConnection();
+        String sql = "SELECT*FROM Customer";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        ResultSet rst = statement.executeQuery();
+        
+        ArrayList<CustomerDto> customerDtos = new ArrayList<>();
+        
+        while (rst.next()){
+            CustomerDto dto = new CustomerDto();
+            dto.setCustID(rst.getString("CustID"));
+            dto.setCustName(rst.getString("CustName"));
+            dto.setDOB(rst.getString("DOB"));
+            dto.setAddress(rst.getString("Address"));
+            dto.setSalary(rst.getInt("Salary"));
+            
+            customerDtos.add(dto);
+        }
+        
+        return customerDtos;
+        
+    }
 }

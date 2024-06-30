@@ -7,6 +7,7 @@ package ijse.supermarket.mvc.view;
 import ijse.supermarket.mvc.controller.CustomerController;
 import ijse.supermarket.mvc.dto.CustomerDto;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
@@ -257,6 +258,7 @@ public class CustomerView extends javax.swing.JFrame {
   }
   
   public Void loadCustomers(){
+    try {  
       String columns[]= {"ID", "Name", "Dob", "Address","Salary"};
       DefaultTableModel dtm = new DefaultTableModel(columns,0){
           @Override
@@ -266,9 +268,24 @@ public class CustomerView extends javax.swing.JFrame {
         
       };    
           tblcust.setModel(dtm);
-          return null;
         
-  }
-    
+        
+     
+      
+            ArrayList<CustomerDto> customerDtos = customerController.getAllCustomer();
+            
+             for(CustomerDto customerDto : customerDtos){
+            Object[] rowData = {customerDto.getCustID(),customerDto.getCustName(),customerDto.getDOB(),customerDto.getAddress(),customerDto.getSalary()};
+            dtm.addRow(rowData);
+        }
+            
+            
+        } catch (Exception ex) {
+            Logger.getLogger(CustomerView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+        
+       
+}
 
 }

@@ -7,6 +7,7 @@ package ijse.supermarket.mvc.controller;
 import ijse.supermarket.mvc.dto.CustomerDto;
 import ijse.supermarket.mvc.model.CustomerModel;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
@@ -23,5 +24,10 @@ public class CustomerController {
     public String saveCustomer(CustomerDto customerdto) throws ClassNotFoundException, SQLException{
         return customerModel.saveCustomer(customerdto);
         
+    }
+    
+    public ArrayList<CustomerDto> getAllCustomer() throws Exception{
+        return customerModel.getAllCustomer();
+    
     }
 }
