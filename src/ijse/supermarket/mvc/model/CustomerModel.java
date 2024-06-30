@@ -86,4 +86,26 @@ public class CustomerModel {
         }
         return dto;
     }
+    
+    public String updateCustomer(CustomerDto customerDto) throws SQLException, ClassNotFoundException{
+        Connection connection = DBconnection.getinstance().getConnection();
+        
+        String sql = "UPDATE Customer SET  CustName=?, DOB=?, Address=?, Salary=?, TelNo=? WHERE CustID=?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        
+        statement.setString(1,customerDto.getCustName());
+        statement.setString(2,customerDto.getDOB());
+        statement.setString(3,customerDto.getAddress());
+        statement.setInt(4,customerDto.getSalary());
+        statement.setInt(5,customerDto.getTelNo());
+       // statement.setString(6,customerDto.getCustID());
+        statement.setString(6,customerDto.getCustID());
+        
+        if(statement.executeUpdate()>0){
+            return "Success";     
+        }else{
+            return "fail";
+        }
+        
+    }
 }
