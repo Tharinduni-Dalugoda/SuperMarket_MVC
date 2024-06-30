@@ -285,7 +285,7 @@ public class CustomerView extends javax.swing.JFrame {
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        // TODO add your handling code here:
+        deleteCustomer();
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void tblcustMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblcustMouseClicked
@@ -418,6 +418,19 @@ public class CustomerView extends javax.swing.JFrame {
             dto.setTelNo(Integer.parseInt(txttel.getText()));
             
             String resp = customerController.updateCustomer(dto);
+            JOptionPane.showMessageDialog(this, resp);
+            loadCustomers();
+            clear();
+        } catch (Exception ex) {
+            Logger.getLogger(CustomerView.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+    }
+    
+    public void deleteCustomer(){
+        try {
+            String custId = txtid.getText();
+            String resp = customerController.deleteCustomer(custId);
             JOptionPane.showMessageDialog(this, resp);
             loadCustomers();
             clear();
